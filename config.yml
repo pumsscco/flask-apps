@@ -1,0 +1,12 @@
+---
+mysql:
+  db: flask
+  host: localhost
+  port: 3306
+  user: flask
+  pass: '7Q&W2D`eY~93cqiKHTvLK'
+redis:
+  db: 0
+  host: localhost
+  port: 6379
+  pass: pFG64SBbhGB56K8Cv5eZbrdQ
