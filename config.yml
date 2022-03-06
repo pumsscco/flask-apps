@@ -1,12 +1,13 @@
 ---
 mysql:
   db: flask
-  host: localhost
+  host: mysql
   port: 3306
   user: flask
-  pass: '7Q&W2D`eY~93cqiKHTvLK'
+  #pass: 7Q&W2D`eY~93cqiKHTvLK
+  pass: bTzxVYVt5PQT2SgsJ4JzjNEW
 redis:
   db: 0
-  host: localhost
+  host: redis
   port: 6379
   pass: pFG64SBbhGB56K8Cv5eZbrdQ

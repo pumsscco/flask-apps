@@ -7,3 +7,11 @@
 * 干脆做一个前后端一体化的项目，先拿考勤来作试验，界面可以参照golang的项目！
 
 
+# sql
+经查，使用以下语句实现了数据库模型的导出
+```bash
+sqlacodegen mysql://flask:bTzxVYVt5PQT2SgsJ4JzjNEW@mysql:3306/flask > models.py
+```
+
+
+
