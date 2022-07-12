@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "_macros.html" as macros %}
+
+{% block title %}最新记录{% endblock %}
+
+{% block page_content %}
+<table class="table table-sm table-bordered table-striped table-hover">
+  <caption >最新记录</caption>
+  <thead class="thead-dark">
+    <tr>
+      <th>打上班卡时间</th>
+      <th>打下班卡时间</th>
+      <th>特殊情况说明</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>rec.checkin</td>
+      <td>rec.checkout</td>
+      <td>rec.comments</td>
+    </tr>
+  </tbody>
+</table>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+{% endblock %}

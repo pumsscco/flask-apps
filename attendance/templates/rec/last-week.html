@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "_macros.html" as macros %}
+
+{% block title %}最近一星期内记录{% endblock %}
+
+{% block page_content %}
+<table class="table table-sm table-bordered table-striped table-hover">
+  <caption >最近一星期内记录</caption>
+  <thead class="thead-dark">
+    <tr>
+      <th>打上班卡时间</th>
+      <th>打下班卡时间</th>
+      <th>特殊情况说明</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for rec in recs %}
+    <tr>
+        <td>{{ rec.checkin }}</td>
+        <td>{{ rec.checkout }}</td>
+        <td>{{ rec.comments }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+{% endblock %}

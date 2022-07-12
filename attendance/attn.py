@@ -10,3 +10,15 @@ moment = Moment(app)
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/rec/latest')
+def latest():
+    return render_template('rec/latest.html', rec=rec)
+
+@app.route('/rec/last-week')
+def last_week():
+    return render_template('rec/last-week.html', recs=recs)
+
+@app.route('/rec/last-month')
+def last_month():
+    return render_template('rec/last-month.html', recs=recs)
