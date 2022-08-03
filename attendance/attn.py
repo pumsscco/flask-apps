@@ -8,7 +8,7 @@ from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
 #----end
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'YHXPUNEK4TCVJHVD9P97CE3WQRAARPXX'
@@ -47,6 +47,11 @@ def last_week():
 
 @app.route('/rec/last-month')
 def last_month():
-    NOW=datetime.now()
-    recs=Attendance.query.filter(Attendance.checkin>=NOW-timedelta(days=7)).order_by(Attendance.checkin.desc()).all()
+    #NOW=datetime.now()
+    #recs=Attendance.query.filter(Attendance.checkin>=NOW-timedelta(days=7)).order_by(Attendance.checkin.desc()).all()
+    stmt='''select checkin,checkout,comments 
+        from attendance 
+        where date_add(checkin,interval 1 month)> now()
+    '''
+    recs=db.engine.execute(stmt)
     return render_template('rec/last-month.html', recs=recs)
