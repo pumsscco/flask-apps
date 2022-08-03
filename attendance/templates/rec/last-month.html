@@ -24,6 +24,9 @@
     {% endfor %}
   </tbody>
 </table>
+<div class="pagination">
+    {{ macros.pagination_widget(pagination, '.index') }}
+</div>
 {% endblock %}
 
 {% block scripts %}

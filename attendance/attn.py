@@ -53,5 +53,9 @@ def last_month():
         from attendance 
         where date_add(checkin,interval 1 month)> now()
     '''
-    recs=db.engine.execute(stmt)
+    res=db.engine.execute(stmt)
+    page = request.args.get('page', 1, type=int)
+    pagination = res.paginate(
+        page, per_page=11, error_out=False)
+    recs = pagination.items
     return render_template('rec/last-month.html', recs=recs)
