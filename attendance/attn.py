@@ -1,5 +1,5 @@
 #from flask import Flask, url_for, render_template
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 from flask_bootstrap import Bootstrap
 from flask_moment import Moment
 #----先把表单相关的模块加入进来，后面会用到的
@@ -30,7 +30,14 @@ class Attendance(db.Model):
     
     def __repr__(self):
         return '<<考勤记录： %r, %r, %r >>' % (self.checkin, self.checkout, self.comments)
-
+    
+    def to_json(self):
+        json_attn = {
+            u'打上班卡时间': self.checkin,
+            u'打下班卡时间': self.checkout,
+            u'备注': self.comments
+        }
+        return json_attn
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -39,6 +46,11 @@ def index():
 def latest():
     rec=Attendance.query.order_by(Attendance.checkin.desc()).first()
     return render_template('rec/latest.html', rec=rec)
+
+@app.route('/api/rec/latest')
+def api_latest():
+    rec=Attendance.query.order_by(Attendance.checkin.desc()).first()
+    return jsonify(rec.to_json())
 
 @app.route('/rec/last-week')
 def last_week():
