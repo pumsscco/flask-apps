@@ -8,6 +8,7 @@ from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
 #----end
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import text
 from datetime import date, datetime, timedelta
 
 app = Flask(__name__)
@@ -42,26 +43,17 @@ def latest():
 @app.route('/rec/last-week')
 def last_week():
     NOW=datetime.now()
-    recs=Attendance.query.filter(Attendance.checkin>=NOW-timedelta(days=7)).order_by(Attendance.checkin.desc()).all()
+    recs=Attendance.query.filter(
+        Attendance.checkin>NOW-timedelta(days=7)).order_by(
+        Attendance.checkin.desc()).all()
     return render_template('rec/last-week.html', recs=recs)
 
 @app.route('/rec/last-month')
 def last_month():
-    """
-    stmt='''select checkin,checkout,comments 
-        from attendance 
-        where date_add(checkin,interval 1 month)> now()
-    '''
-    res=db.engine.execute(stmt)
-    page = request.args.get('page', 1, type=int)
-    pagination = res.paginate(
-        page, per_page=11, error_out=False)
-    recs = pagination.items
-    """
-    NOW=datetime.now()
+    #NOW=datetime.now()
     page = request.args.get('page', 1, type=int)
     pagination=Attendance.query.filter(
-        Attendance.checkin>=NOW-timedelta(days=30)).order_by(
+        Attendance.checkin>text('NOW() - INTERVAL 1 MONTH')).order_by(
         Attendance.checkin.desc()).paginate(
         page, per_page=5, error_out=False)
     recs = pagination.items
