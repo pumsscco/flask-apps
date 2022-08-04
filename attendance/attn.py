@@ -1,5 +1,5 @@
 #from flask import Flask, url_for, render_template
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from flask_bootstrap import Bootstrap
 from flask_moment import Moment
 #----先把表单相关的模块加入进来，后面会用到的
@@ -47,8 +47,7 @@ def last_week():
 
 @app.route('/rec/last-month')
 def last_month():
-    #NOW=datetime.now()
-    #recs=Attendance.query.filter(Attendance.checkin>=NOW-timedelta(days=7)).order_by(Attendance.checkin.desc()).all()
+    """
     stmt='''select checkin,checkout,comments 
         from attendance 
         where date_add(checkin,interval 1 month)> now()
@@ -58,4 +57,12 @@ def last_month():
     pagination = res.paginate(
         page, per_page=11, error_out=False)
     recs = pagination.items
-    return render_template('rec/last-month.html', recs=recs)
+    """
+    NOW=datetime.now()
+    page = request.args.get('page', 1, type=int)
+    pagination=Attendance.query.filter(
+        Attendance.checkin>=NOW-timedelta(days=30)).order_by(
+        Attendance.checkin.desc()).paginate(
+        page, per_page=5, error_out=False)
+    recs = pagination.items
+    return render_template('rec/last-month.html', recs=recs,pagination=pagination)
