@@ -9,7 +9,8 @@ from wtforms.validators import DataRequired
 #----end
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import text
-from sqlalchemy.sql import func
+#from sqlalchemy.sql import func
+from sqlalchemy import func
 from datetime import date, datetime, timedelta
 
 app = Flask(__name__)
@@ -99,23 +100,51 @@ def api_last_month():
 '''SELECT year(checkin),month(checkin),
         sum(hour(timediff(checkout,checkin))+minute(timediff(checkout,checkin))/60)
         FROM attendance group by year(checkin),month(checkin)'''
+'''
+Attendance.query(
+    func.year(Attendance.checkin), 
+    func.month(Attendance.checkin)
+).filter(
+    Attendance.checkin>='2022-06-06'
+).order_by(
+    Attendance.checkin.desc()
+)
+'''
+def month_json(stat):
+    y='年'
+    m='月'
+    h='工时'
+    json_mon = {
+        y: stat.year,
+        m: stat.month,
+        h: stat.hours
+    }
+    return json_mon
 
 @app.route('/api/stat/month')
 def month_hour():
-    month_stats=Attendance.query(
-        func.year(Attendance.checkin), 
-        func.month(Attendance.checkin), 
+    month_stats=Attendance.query.with_entities(
+        func.year(Attendance.checkin).label("year"), 
+        func.month(Attendance.checkin).label("month"), 
         func.sum(
             func.hour(
                 func.timediff(Attendance.checkout, Attendance.checkin)
             )+func.minute(
                 func.timediff(Attendance.checkout, Attendance.checkin)
-            )
+            ).label("hours")
         ) / 60
     ).group_by(
         func.year(Attendance.checkin), 
         func.month(Attendance.checkout)
-    )
-    json_list=[month_stat.to_json() for month_stat in month_stats]
+    ).order_by(year,month)
+    '''month_stats=Attendance.query.with_entities(
+        func.year(Attendance.checkin).label("year"), 
+        func.month(Attendance.checkin).label("month")
+    ).filter(
+        Attendance.checkin>='2022-07-01'
+    ).order_by(
+        Attendance.checkin.desc()
+    ).all()'''
+    json_list=[month_json(month_stat) for month_stat in month_stats]
     return jsonify(json_list)
 
